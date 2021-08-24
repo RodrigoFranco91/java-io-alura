@@ -1,0 +1,95 @@
+Neste capítulo vamos aprender como trabalhar com entradas (leitura) de modo mais facil!
+
+1) Estavamos tendo que usar 3 objetos para ler de um arquivo. Poderiamos usar da seguinte forma (com apenas um objeto, do tipo
+Scanner):
+
+	public class TesteLeituraFacil {
+
+	    public static void main(String[] args) throws FileNotFoundException {
+
+		//Fluxo de Entrada com arquivo.
+
+		//Lendo o arquivo
+		Scanner scanner = new Scanner(new File("contas.csv"));
+
+		//Verificando se no arquivo há linhas a ser lidas
+		while(scanner.hasNext()){
+		    //Lendo a linha
+		    String linha = scanner.nextLine();
+		    System.out.println(linha);
+		}
+
+		scanner.close();
+	    }
+	}
+	
+
+2) Quebrando (Parseando) um arquivo com o metodo split():
+
+        while(scanner.hasNext()){
+            //Lendo a linha
+            String linha = scanner.nextLine();
+            String[] valores = linha.split(",");
+            System.out.println(valores[3]);
+        }
+
+
+3) Quebrando (Parseando) um arquivo com o metodo useDelimiter(), precisamos criar um scanner para ler as linhas do arquivo e outro
+para ler o arquivo:
+
+	 while(scanner.hasNext()){
+		    //Lendo a linha
+		    String linha = scanner.nextLine();
+
+		    //Lendo a linha com scanner
+		    Scanner linhaScanner = new Scanner(linha);
+		    linhaScanner.useDelimiter(",");
+
+		    String valor1 = linhaScanner.next();
+		    String valor2 = linhaScanner.next();
+		    String valor3 = linhaScanner.next();
+		    String valor4 = linhaScanner.next();
+		    String valor5 = linhaScanner.next();
+
+		    System.out.println(valor1);
+		    System.out.println(valor2);
+		    System.out.println(valor3);
+		    System.out.println(valor4);
+		    System.out.println(valor5);
+
+		}
+		
+Podemos já ler os valores e fazer o parse para tipo correto, ficando assim. Note que fizemos uma configuracao via metodo useLocale()
+para definir que double separará casas decimais com ponto:
+
+	while(scanner.hasNext()){
+		    //Lendo a linha
+		    String linha = scanner.nextLine();
+
+		    //Lendo a linha com scanner
+		    Scanner linhaScanner = new Scanner(linha);
+
+		    //Configurando para ler um double com ponto.
+		    linhaScanner.useLocale(Locale.US);
+
+		    //Quebrando com useDelimiter
+		    linhaScanner.useDelimiter(",");
+
+		    String valor1 = linhaScanner.next();
+		    int valor2 = linhaScanner.nextInt();
+		    int valor3 = linhaScanner.nextInt();
+		    String valor4 = linhaScanner.next();
+		    double valor5 = linhaScanner.nextDouble();
+
+		    System.out.println(valor1 + valor2 + valor3 + valor4 + valor5);
+		    
+		    
+4) Definindo regras de formatção ao printar a linha:
+
+            //Formatando o jeito que será printado.
+            //% define o time da variável que passamos, o %s é de String
+            //DEvemos consultar a documentação para saber o caractere de cada tipo.
+            //Locale não é obrigatório...Como não há Locale.BR, tivemos que dar um new()
+            String valorFormatado = String.format(new Locale("pt", "BR"),"%s - %04d - %08d - %s - 
+%08.2f",valor1,valor2,valor3,valor4,valor5);
+            System.out.println(valorFormatado);

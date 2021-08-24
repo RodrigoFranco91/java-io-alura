@@ -1,0 +1,95 @@
+Neste capítulo aprendemos a escrever em um arquivo.
+
+
+1)Como fazer a saída de dados através de um arquivo:
+
+Vamos criar a classe TesteEscrita para fazer o teste de escrita de um arquivo texto. Dentro dessa classe devemos criar o metodo main()
+
+Após isso vamos criar um objeto da classe FileOutputStream e no seu construtor vamos colocar o caminho do arquivo.
+
+Vamos agora criar o objeto do tipo OutputStreamWriter, com esse objeto é possivel ler uma string e transformá-lo em bits, pois a 
+classe FileOutputStream precisa de bits para salvar.
+
+Por fim vamos criar o objeto do tipo BufferedWriter, com ele é possivel escrever uma linha completa em texto. Basta usar o método 
+write().
+
+Não se esqueça que ao trabalhar com o pacote io.java teremos diversas excpetion checked (que temos que tratar)!
+
+Veja como ficou:
+
+	public class TesteEscrita {
+
+	    public static void main(String[] args) throws IOException {
+
+		//Fluxo de Saída com arquivo.
+
+		//Vamos escrever no arquivo
+		OutputStream fos = new FileOutputStream("lorem2.txt");
+
+		//OutputStreamWriter é que saberá escrever os caracteres em bits
+		Writer osw = new OutputStreamWriter(fos);
+
+		//Vamos escrever uma string completa
+		BufferedWriter bw = new BufferedWriter(osw);
+
+		//Escrevendo no arquivo. o newLine() serve para jogar o cursor para linha de baixo
+		//Para deixar uma linha vazia temos que usar 2x o newLine()
+		bw.write("Escrevendo a priminha linha");
+		bw.newLine();
+		bw.newLine();
+		bw.write("Escrevendo a segunda linha");
+
+		//Fechando a leitura.
+		bw.close();
+	    }
+	}
+	
+
+2) Veja como ficou o código para ler o arquivo lorem.txt e passar todo conteudo para o arquivo lorem2.txt:
+
+	public class TesteLeituraComEscrita {
+
+	    public static void main(String[] args) throws IOException {
+
+		InputStream fis = new FileInputStream("lorem.txt");
+		Reader isr = new InputStreamReader(fis);
+		BufferedReader br = new BufferedReader(isr);
+
+		OutputStream fos = new FileOutputStream("lorem2.txt");
+		Writer osw = new OutputStreamWriter(fos);
+		BufferedWriter bw = new BufferedWriter(osw);
+
+		String linha = br.readLine();
+
+		while(linha != null){
+		    bw.write(linha);
+		    bw.newLine();
+		    linha = br.readLine();
+		}
+		
+		br.close();
+		bw.close();
+	    }
+	}
+	
+	
+3) E se agora eu quiser ler dados do teclado, terei que fazer muitas mudanças? Não, basta mudar:
+
+Esta linha: InputStream fis = new FileInputStream("lorem.txt");
+Por: InputStream fis = System.in;
+
+Esta linha: while(linha != null) 
+Por: while(linha != null && !linha.isEmpty()) 
+
+
+4) E se agora eu quiser escrever dados no console, terei que fazer muitas mudanças? Não, basta mudar:
+
+Esta linha: OutputStream fos = new FileOutputStream("lorem2.txt");
+Por: OutputStream fos = System.out;
+
+Esta linha: while(linha != null) 
+Por: while(linha != null && !linha.isEmpty()) ou então adicionar dentro do while o método flush(), no caso, bw.flush()
+
+
+5) E se agora eu quiser ler e escrever na rede? Não vamos simular isso pois precisaria de outro PC, mas bastaria criar um socket:
+Socket s = new Socket()

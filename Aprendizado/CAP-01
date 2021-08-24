@@ -1,0 +1,84 @@
+Neste capítulo aprendemos a fazer leitura de um arquivo em java.
+
+
+Foi discutido que hoje em dia dificilmente um programa vai 'viver' sozinho, certamente ele receberá dados de um arquivo, rede, ou
+teclado. Se temos entrada de dados, certamente haverá uma saida de dados, que poderá ser em outro arquivo, em rede ou console.
+
+
+1)Como fazer a entrada de dados através de um arquivo:
+
+Vamos criar a classe TesteLeitura para fazer o teste de leitura de um arquivo texto. Dentro dessa classe devemos criar o metodo main()
+
+Após isso vamos criar um objeto da classe FileInputStream e no seu construtor vamos colocar o caminho do arquivo. Só que a classe
+FileInputStream só sabe ler os bits do arquivo.
+
+Vamos agora criar o objeto do tipo InputStreamReader, com esse objeto é possivel ler o bit do arquivo e transformá-lo em char.
+O problema que com este ao ler a linha do arquivo nós teremos um array com vários caracteres, não será facil manipulá-lo.
+
+Por fim vamos criar o objeto do tipo BufferedReader, com ele é possivel ler a linha toda do arquivo, não vamos precisar manipular um
+array. Para ler uma linha basta chamar o método readLine();
+
+Não se esqueça que ao trabalhar com o pacote io.java teremos diversas excpetion checked (que temos que tratar)!
+
+Veja como ficou:
+
+	public class TesteLeitura {
+
+	    public static void main(String[] args) throws IOException {
+
+		//Fluxo de Entrada com arquivo.
+
+		//Lendo o arquivo
+		FileInputStream fis = new FileInputStream("lorem.txt");
+
+		//InputStreamReader é que saberá ler o int (bits) e transformar em char
+		//Só que guardará cada caractere em um array
+		InputStreamReader isr = new InputStreamReader(fis);
+
+		//Vamos conseguir ler linha por linha.
+		BufferedReader br = new BufferedReader(isr);
+
+		//Lendo a primeira linha do arquivo
+		String linha = br.readLine();
+
+		System.out.println(linha);
+
+		//Fechando a leitura.
+		br.close();
+	    }
+	}
+	
+Por curiosidade: estamos usando o padrão de projeto decorator, onde um objeto está decorando a funcionalidade de outro.
+
+Note que as classes Stream trabalham com bits e as classes Reader com caracteres (String)!
+
+2) Lendo o arquivo todo e deixando o tipo de referencia dos objetos o mais genérico possível:
+
+	public class TesteLeitura {
+
+	    public static void main(String[] args) throws IOException {
+
+		//Fluxo de Entrada com arquivo.
+
+		//Lendo o arquivo
+		InputStream fis = new FileInputStream("lorem.txt");
+
+		//InputStreamReader é que saberá ler o int (bits) e transformar em char
+		//Só que guardará cada caractere em um array
+		Reader isr = new InputStreamReader(fis);
+
+		//Vamos conseguir ler linha por linha.
+		BufferedReader br = new BufferedReader(isr);
+
+		//Lendo a primeira linha do arquivo
+		String linha = br.readLine();
+
+		while(linha != null){
+		    System.out.println(linha);
+		    linha = br.readLine();
+		}
+
+		//Fechando a leitura.
+		br.close();
+	    }
+	}

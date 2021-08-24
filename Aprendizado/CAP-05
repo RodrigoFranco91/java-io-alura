@@ -1,0 +1,98 @@
+Neste capítulo discutimos sobre Character Sets, conhecidos como charset.
+
+Lembre-se que as vezes abrimos sites/arquivos e os mesmos possuem uns caracteres estranhos? Isso ocorre devido a configuração de 
+Charset. Tenha em mente que todo caracter de um texto será salvo em modo binario no HD e há diversas tabelas que associam uma sequencia
+binaria com um caractere, uma das tabelas mais famosas é ASCII.
+
+O problema com arquivo ocorre quando salvamos um arquivo seguindo a tabela X e a pessoa que for ler o arquivo usa a tabela Y. Poderá
+aparecer caracteres estranhos.
+
+O java sempre usa o Unicode, onde cada caracter tem um Codepoint. A partir do Unicode poderemos escolher uma tabela de Enconding,
+poderá ser por exemplo: ASCII, UTF-8, UTF-16, Windows 1252. A tablea Unicode é universal para todos sistemas operacionais, já a de
+Coding pode mudar de acordo com o sistema operacional.
+
+
+1) Pegango o codepoint de uma caracter (letrta):
+
+        String caracter = "CASA";
+        //Pegando o codepoint da letra C, por isso usamos o indice 0
+        System.out.println(caracter.codePointAt(0));
+        
+
+2) Verificando o charset em uso:
+
+        Charset charset = Charset.defaultCharset();
+        System.out.println(charset.displayName());
+        
+
+3) Verificando quantos bytes se faz necessário para escrever o valor "CASA", no caso utilizando o charset padrão:
+
+        byte[] bytes = caracter.getBytes();
+        System.out.println(bytes.length);
+        
+        
+4) Verificando quantos bytes se faz necessário para escrever o valor "CASA", no caso utilizando o charset US_ASCII:
+
+        byte[] bytes2 = caracter.getBytes(StandardCharsets.US_ASCII);
+        System.out.println(bytes2.length + " ,US_ASCII");
+        
+        
+5) Construindo um caracter (string) através de bytes, utilizando o charset padrão:
+
+        String novoCaractere = new String(bytes2);
+        System.out.println(novoCaractere);
+        
+        
+6) Construindo um caracter (string) através de bytes, utilizando o charset US-ASCII:
+
+        String novoCaractere2 = new String(bytes2, "US-ASCII");
+        System.out.println(novoCaractere2);
+        
+
+7) Erros ao abrir no windows o arquivo csv criado no macbook. Solução foi clicar botão direito no arquivo CSV e trocar o tipo de
+encoding. (Colocamos o UTF-8 que é padrão do macbook). Isso só serviu para abrir o arquivo ao dar dois cliques e o mesmo é exibido 
+na janela da IDE. 
+
+Soluçao ao ler arquivo (adicionamos essa solução no arquivo testeLeituraFacil):
+
+        //Lendo o arquivo
+        Scanner scanner = new Scanner(new File("contas.csv"), "UTF-8");
+        
+Soluçao ao ler arquivo (adicionamos essa solução no arquivo testeLeitura):
+
+        //InputStreamReader é que saberá ler o int (bits) e transformar em char
+        //Só que guardará cada caractere em um array
+        Reader isr = new InputStreamReader(fis, "UTF-8");
+        
+
+8) No momento de escrever também podemos definir o charset, veja exemplos:
+
+No arquivo TesteEscritaMaisFacil:
+
+        //No modo mais fácil ainda (opcao 2):
+        //Definindo que vamos escrever no arquivo usando charset UTF-8
+        PrintWriter ps = new PrintWriter("lorem2.txt", "UTF-8");
+
+        
+Exercicio:
+Pedro deseja testar os ensinamentos do vídeo. Então ele criou uma string com caracteres especiais em português, converteu-os em 
+bytes e depois gerou nova string a partir desses bytes. Contudo, quando ele imprimiu a segunda string ele obteve um problema na 
+codificação.
+
+Veja o código de Pedro:
+String s1 = "13º Órgão Oficial";
+byte[] bytes = s1.getBytes();
+String s2 = new String(bytes, "UTF-8");
+System.out.println(s2);
+
+Veja o valor impresso no console:
+13? ?rg?o Oficial
+
+Resolução:
+Charset utf8 = StandardCharsets.UTF_8;
+String s1 = "13º Órgão Oficial";
+byte[] bytes = s1.getBytes(utf8);
+String s2 = new String(bytes, utf8);
+System.out.println(s2);
+
+

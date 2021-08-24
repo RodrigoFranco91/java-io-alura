@@ -1,0 +1,100 @@
+Neste capítulo vamos aprender como trabalhar com escrita (saidas) de modo mais facil!
+
+1) Estavamos tendo que usar 3 objetos para escrever em um arquivo. Poderiamos usar da seguinte forma (com apenas um objeto):
+
+	public class TesteEscritaFacil {
+
+	    public static void main(String[] args) throws IOException {
+
+		FileWriter fw = new FileWriter("lorem2.txt");
+
+		//Escrevendo no arquivo.
+		//Para pular linha agora usamos o \n ou \r\n vai depender do sistema operacional
+		//Para pular linha de modo genérico devemos usar System.lineSeparator()
+		fw.write("Escrevendo a priminha linha");
+	//        fw.write("\r\n");
+	//        fw.write("\r\n");
+		fw.write(System.lineSeparator());
+		fw.write(System.lineSeparator());
+		fw.write("Escrevendo a segunda linha");
+
+		//Fechando a leitura.
+		fw.close();
+	    }
+	}
+
+	
+Só que é comum vermos assim também (continuar usando BufferedWriter):
+
+	public class TesteEscritaFacil {
+
+	    public static void main(String[] args) throws IOException {
+
+
+		//No modo fácil, basta:
+		FileWriter fw = new FileWriter("lorem2.txt");
+		BufferedWriter bw = new BufferedWriter(fw);
+
+		bw.write("Escrevendo a priminha linha");
+		bw.newLine();
+		bw.newLine();
+		bw.write("Escrevendo a segunda linha");
+
+		//Fechando a leitura.
+		fw.close();
+	    }
+	}
+	
+Podemos simplicar ainda mais o código anterior trocando as duas linhas:
+
+		FileWriter fw = new FileWriter("lorem2.txt");
+		BufferedWriter bw = new BufferedWriter(fw);
+		
+Por:
+		BufferedWriter bw = new BufferedWriter(new FileWriter("lorem2.txt"));
+		
+		
+2) Existe duas formas ainda mais faceis (simples) de escrever em um arquivo, no caso usando o PrintStream ou PrintWriter. Vamos 
+criar a classe TesteEscritaMaisFacil, veja como é:
+
+Opção 1:
+
+	public class TesteEscritaMaisFacil {
+
+	    public static void main(String[] args) throws IOException {
+
+
+		//No modo mais fácil ainda:
+		PrintStream ps = new PrintStream("lorem2.txt");
+
+		//Escrevendo no arquivo. Usando println ao terminar alinha o cursor já é jogado para proxima.
+		ps.println("Escrevendo a priminha linha");
+		ps.println();
+		ps.println("Escrevendo a segunda linha");
+
+		//Fechando a leitura.
+		ps.close();
+	    }
+	}
+
+É comum vermos a linha: PrintStream ps = new PrintStream(new File("lorem2.txt"));
+no lugar da: PrintStream ps = new PrintStream("lorem2.txt");
+
+Opção 2:
+
+	public class TesteEscritaMaisFacil {
+
+	    public static void main(String[] args) throws IOException {
+
+		//No modo mais fácil ainda (opcao 2):
+		PrintWriter ps = new PrintWriter("lorem2.txt");
+
+		//Escrevendo no arquivo. Usando println ao terminar alinha o cursor já é jogado para proxima.
+		ps.println("Escrevendo a priminha linha");
+		ps.println();
+		ps.println("Escrevendo a segunda linha");
+
+		//Fechando a leitura.
+		ps.close();
+	    }
+	}

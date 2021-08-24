@@ -1,0 +1,130 @@
+Neste capitulo abordamos o tema Serialização de Objetos.
+
+
+Sabemos que o objeto a ser salvo no HD é gravado no formato bytes.
+
+A serialização também é usada quando um programa externo que acessar os dados do nosso programa e vice-versa, ou seja, duas maquinas
+virtuais chamando a outra (haverá chamadas via rede).
+
+Conseguimos transformar um objeto em bytes (serialização) e vice-versa (deserialização) também.
+
+
+1) Sereializando um objeto do tipo String (salvando o objeto em binário):
+
+        //Ciando um objeto
+        String nome = "Rodrigo Franco";
+
+        //Escrevendo objeto em bytes
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("objeto.bin"));
+        oos.writeObject(nome);
+        oos.close();
+        
+
+2) Deserializando um objeto do tipo String (lendo um arquivo binário):
+
+        //Lendo um aquivo binario e criando um objeto através do conteudo do arquivo
+        //O retorno de ObjectInputStream() é sempre object, logo temos que fazer o casting
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("objeto.bin"));
+        String lendoDoAruivo = (String) ois.readObject();
+        ois.close();
+        System.out.println(lendoDoAruivo);
+
+
+3) Criando a classe Cliente, para ela poder ser serializada é preciso que implemente a interface Serializable:
+
+	public class Cliente implements Serializable  {
+
+	    private String nome;
+	    private String cpf;
+	    private String profissao;
+
+	    public String getNome() {
+		return nome;
+	    }
+	    public void setNome(String nome) {
+		this.nome = nome;
+	    }
+	    public String getCpf() {
+		return cpf;
+	    }
+	    public void setCpf(String cpf) {
+		this.cpf = cpf;
+	    }
+	    public String getProfissao() {
+		return profissao;
+	    }
+	    public void setProfissao(String profissao) {
+		this.profissao = profissao;
+	    }
+
+	}
+	
+	
+4) Serializando a classe Cliente, Cliente tem que implementar Serializable, não esqueça!:
+
+        //Serializando o objeto cliente.
+        //Salvado no arquivo cliente.bin
+        //Lembre-se a classe CLiente deve implementar a interface Serializable
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("cliente.bin"));
+        oos.writeObject(cliente);
+        oos.close();
+        
+        
+5) Deserializando a classe Cliente, Cliente tem que implementar Serializable, não esqueça!:
+
+        //Deserializando objeto do tipo Cliente
+        //Lendo o arquivo cliente.bin
+        //Lembre-se a classe CLiente deve implementar a interface Serializable
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("cliente.bin"));
+        Cliente lendo_cliente = (Cliente) ois.readObject();
+        ois.close();
+        System.out.println(lendo_cliente.getNome());    
+        
+        
+6) Warning da classe Cliente. Ao fazer a classe implementar a interface Serializable, ganhamos o waning sobre serialVersionUID.
+Ao clicar nesse waning há a opção de adicionar um serialVersionUID e o mesmo gera um atributo static final chamado serialVersionUID
+com valor = 1L.
+
+Ao tentar serializar um objeto normal, SEM atributo serialVersionUID, o Java atribui automaticamente um identificador para a
+classe. Ao deserializar um objeto o identificador do objeto é comparado com o identificador da classe que o construiu, se for igual
+ocorre a deserialização, caso não bata a operação é encerrada. Ou seja, o identificador é definido pela classe e todos seus objetos
+terá o mesmo valor de identificador.
+
+Se a classe tiver o atributo serialVersionUID com valor = 1L todo objeto dessa classe terá o identificador e porque devemos fazer
+isso se o java atribuiu um valor automaticamente? O motivo é que cada mudança na classe (seja um atributo ou metodo novo, ou até 
+mesmo mudar a implementação de um método) irá gerar um novo identificador, e isso é perigoso! Vai que eu tenho um arquivo bin da 
+classe cliente cujo identificador é X ao fazer uma mudança na classe o identificador vai ser Y e nunca mais vou conseguir
+deserializar do arquivo bin.
+
+O ideal era sempre usar o atributo serialVersionUID em toda classe que implementa Serializable e em cada mudança na classe nós
+mesmos incrementar o valor desse atributo, ou seja, (1,2,3...)
+
+
+7) Serializando uma classe com Herança e com composição:
+
+Para serializar classes com composição, todos envolvidos (relacionamento), devem implementar a interface Serializable. Pense no
+exemplo: objeto contaCorrente tem um atributo do tipo cliente, ambos devem imeplemtar a interface.
+Há uma outra opção, no caso classe Cliente não precisaria implementar a interface, bastaria colocar no atributo cliente lá na 
+classe Conta a palavra chave: transient (há uma anotação para isso), mas neste caso vamos jogar fora o relacionamento!
+
+Para deserializar classes com herança, todas classes envolvidas (filha e mãe) devem implementar a interface Serializable.
+Pense no exemplo: objeto contaCorrente tem um atributo do tipo cliente, ambos devem imeplemtar a interface, mas a classe mae de 
+ContaCorrente também deverá, pois sua filha contaCorrente chama o construtor da classe mãe, neste caso ou filha e mãe implementa ou
+somente a mãe...
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
